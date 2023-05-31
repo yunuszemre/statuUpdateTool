@@ -16,6 +16,7 @@ namespace statuUpdateTool.Models
         {
         }
 
+        public virtual DbSet<HbjDagıtımBolgeleriEvetHayirSayili> HbjDagıtımBolgeleriEvetHayirSayilis { get; set; } = null!;
         public virtual DbSet<HjHizmetBoLgeleri> HjHizmetBoLgeleris { get; set; } = null!;
         public virtual DbSet<Test> Tests { get; set; } = null!;
 
@@ -30,6 +31,25 @@ namespace statuUpdateTool.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<HbjDagıtımBolgeleriEvetHayirSayili>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("hbj_dagıtım_bolgeleri_evet_hayir_sayili");
+
+                entity.Property(e => e.Evet).HasColumnName("EVET");
+
+                entity.Property(e => e.Hayir).HasColumnName("HAYIR");
+
+                entity.Property(e => e.İlçe)
+                    .HasMaxLength(50)
+                    .HasColumnName("İLÇE");
+
+                entity.Property(e => e.Şehİr)
+                    .HasMaxLength(50)
+                    .HasColumnName("ŞEHİR");
+            });
+
             modelBuilder.Entity<HjHizmetBoLgeleri>(entity =>
             {
                 entity.HasNoKey();

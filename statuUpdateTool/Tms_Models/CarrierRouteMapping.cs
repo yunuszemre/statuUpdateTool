@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace statuUpdateTool.Tms_Models
 {
-    public partial class CarrierRouteMapping
+    public class CarrierRouteMapping
     {
         public CarrierRouteMapping()
         {
             CarrierRouteMappingMobileBranches = new HashSet<CarrierRouteMappingMobileBranch>();
         }
-
+   
         public long CarrierRouteMappingId { get; set; }
         public long CarrierId { get; set; }
         public long? CountryId { get; set; }
@@ -26,7 +27,7 @@ namespace statuUpdateTool.Tms_Models
         public byte[] RowVersion { get; set; } = null!;
         public bool IfTransferredToSecondary { get; set; }
 
-        public virtual Carrier Carrier { get; set; } = null!;
+        public virtual Carrier Carrier { get; set; }
         public virtual City? City { get; set; }
         public virtual Country? Country { get; set; }
         public virtual District? District { get; set; }
