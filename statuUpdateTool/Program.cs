@@ -48,6 +48,9 @@ internal class Program
         //Dictionary<string, string> map = new Dictionary<string, string>();
 
         List<CityModel> cityList = new List<CityModel>();
+        List<City> cities = tmsCont.Cities.ToList();
+        List<Town> towns = tmsCont.Towns.Include(x => x.City).ToList();
+        List<District> districts = tmsCont.Districts.ToList();
         string? currentCity;
         string? currentTown;
         string? previousCity;
@@ -177,21 +180,63 @@ internal class Program
         Console.WriteLine(kullanilacakListe[416]);
         Console.WriteLine(kullanilacakListe[544]);
         Console.WriteLine(kullanilacakListe[548]);
-        kullanilacakListe.RemoveAt(18);
-        kullanilacakListe.RemoveAt(259);
+        Console.WriteLine(kullanilacakListe[589]);
+        Console.WriteLine(kullanilacakListe[688]);
+        Console.WriteLine(kullanilacakListe[741]);
+        Console.WriteLine(kullanilacakListe[812]);
+        Console.WriteLine(kullanilacakListe[853]);
+
+        //kullanilacakListe.RemoveAt(18);
+        //kullanilacakListe.RemoveAt(259);
         kullanilacakListe.RemoveAt(416);
         kullanilacakListe.RemoveAt(544);
         kullanilacakListe.RemoveAt(548);
+        kullanilacakListe.RemoveAt(589);
+        kullanilacakListe.RemoveAt(595);
+        kullanilacakListe.RemoveAt(688);
+        kullanilacakListe.RemoveAt(741);
+        kullanilacakListe.RemoveAt(812);
+        kullanilacakListe.RemoveAt(849);
+        kullanilacakListe.RemoveAt(850);
+        kullanilacakListe.RemoveAt(853);
+        kullanilacakListe.RemoveAt(854);
+        kullanilacakListe.RemoveAt(855);
+        kullanilacakListe.RemoveAt(856);
+        var routes = tmsCont.CarrierRouteMappings.Include(x => x.Carrier).Include(x => x.City).Include(x => x.Town).Include(x => x.District).Where(x => x.Carrier.Code == "HBJ").ToList();
+        var updatedRoutes = new List<CarrierRouteMapping>();
 
         var startTime = DateTime.Now;
         try
         {
-            
+
             foreach (var item in kullanilacakListe)
             {
-               
-                updatedRoute = tmsCont.CarrierRouteMappings.FirstOrDefault(r => r.Carrier.Code.ToUpper() == "HBJ" && r.City.Code.ToUpper() == item.City.ToUpper() && r.Town.Code.ToUpper() == item.Town.ToUpper() && r.District.Code.ToUpper() == item.Mahalle.ToUpper());
+                //var addedTown = towns.Find(r => r.City.Code.ToUpper() == item.City.ToUpper() && r.Town.Code.ToUpper() == item.Town.ToUpper());
+                ////var addedDistrict = districts.Find(r => r.City.Code.ToUpper() == item.City.ToUpper() && r.Town.Code.ToUpper() == item.Town.ToUpper() && r.DistrictId.Code.ToUpper() == item.Mahalle.ToUpper());
+                //if (addedTown == null)
+                //{
+                //    continue;
+                //}
+                //if (addedDistrict==null)
+                //{
+                //    new District
+                //    {
 
+                //    };
+                //    //tmsCont.Districts.Add();
+                //}
+                bool isDbContains = towns.FindAll(x => x.City.Code == item.City && x.Code == item.Town).Count > 0 ? true : false;
+                if (!isDbContains)
+                {
+                    continue;
+                }
+
+
+                updatedRoute = routes.Find(r => r.Carrier.Code.ToUpper() == "HBJ" && r.City.Code.ToUpper() == item.City.ToUpper() && r.Town.Code.ToUpper() == item.Town.ToUpper() && r.District.Code.ToUpper() == item.Mahalle.ToUpper());
+                if (updatedRoute != null)
+                {
+                    Console.WriteLine(updatedRoute.CityId);
+                }
                 if (updatedRoute == null)
                 {
                     bulunamayanSAy++;
@@ -205,21 +250,18 @@ internal class Program
                         CreatedDate = DateTime.Now,
                         CreateUserIdentityId = 2,
                         RecordStatusId = item.EvetHayır.ToLower() == "evet" ? 1 : 2,
-                        Carrier = tmsCont.Carriers.FirstOrDefault(x => x.CarrierId == 2),
-                        City = tmsCont.Cities.FirstOrDefault(x => x.Code == item.City),
-                        Town = tmsCont.Towns.FirstOrDefault(x => x.Code == item.Town),
-                        District = tmsCont.Districts.FirstOrDefault(x => x.Code == item.Mahalle),
-                        CarrierRouteMappingMobileBranches = new List<CarrierRouteMappingMobileBranch>(),
-                        IsMobileBranch = null,
+                        IsMobileBranch = false,
                         RoutingLevel = 4,
+                        CarrierRouteMappingMobileBranches = new List<CarrierRouteMappingMobileBranch>(),
+                        ChangedDate = DateTime.Now,
+                        ChangeUserIdentityId = 2
+
+
 
                     };
-                    if (newRoute == null)
-                    {
-                        Console.WriteLine(item);
-                    }
+
                     tmsCont.CarrierRouteMappings.Add(newRoute);
-                    Console.WriteLine($"Eklenen kayıt: Taşıyıcı: {newRoute.Carrier.Code} Şehir: {newRoute.City.Code} İlçe: {newRoute.Town.Code} Mahalle: {newRoute.District.Code} Id: {newRoute.CarrierRouteMappingId}\n");
+                    //Console.WriteLine($"Eklenen kayıt: Taşıyıcı: {newRoute.Carrier.Code} Şehir: {newRoute.City.Code} İlçe: {newRoute.Town.Code} Mahalle: {newRoute.District.Code} Id: {newRoute.CarrierRouteMappingId}\n");
                     Console.WriteLine($"İşlem başarıyla tamamlandı, Etkilenen kayıt sayısı: {etkilenenKayitSayisi}\n");
                     //Console.WriteLine($"Kayıt bulunamadı deneme sayısı: {bulunamayanSAy}");
                 }
@@ -256,12 +298,12 @@ internal class Program
         }
         finally
         {
-            
+
             if (etkilenenKayitSayisi > 0)
             {
                 var endTime = DateTime.Now;
                 Console.WriteLine($"İşlem başarıyla tamamlandı, Etkilenen kayıt sayısı: {etkilenenKayitSayisi}");
-                Console.WriteLine($"TamamlanmaSaati: {endTime} Geçen Süre: {(endTime-startTime).TotalMinutes} dakika");
+                Console.WriteLine($"TamamlanmaSaati: {endTime} Geçen Süre: {(endTime - startTime).TotalMinutes} dakika");
                 Console.ReadLine();
             }
         }

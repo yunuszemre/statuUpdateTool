@@ -6,10 +6,7 @@ namespace statuUpdateTool.Tms_Models
 {
     public class CarrierRouteMapping
     {
-        public CarrierRouteMapping()
-        {
-            CarrierRouteMappingMobileBranches = new HashSet<CarrierRouteMappingMobileBranch>();
-        }
+        
    
         public long CarrierRouteMappingId { get; set; }
         public long CarrierId { get; set; }
