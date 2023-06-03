@@ -115,6 +115,8 @@ internal class Program
                     bool isDbContains = towns.FindAll(x => x.City.Code == item.City && x.Code == item.Town).Count > 0 ? true : false;
                     if (!isDbContains)
                     {
+                        file.WriteLine($"İlçe bulunamadı:{item.City} {item.Town}");
+                        Console.WriteLine($"İlçe bulunamadı:{item.City} {item.Town}");
                         continue;
                     }
 
@@ -123,8 +125,8 @@ internal class Program
                     if (!isDbContainsDistrict)
                     {
                         count++;
-                        Console.WriteLine($"Mahalle bulunamadı:{item.City} {item.Town} {item.Mahalle} {count}");
-                        file.WriteLine($"Mahalle bulunamadı:{item.City} {item.Town} {item.Mahalle} {count}");
+                        Console.WriteLine($"Mahalle bulunamadı:{item.City} {item.Town} {item.Mahalle}");
+                        file.WriteLine($"Mahalle bulunamadı:{item.City} {item.Town} {item.Mahalle}");
                         //continue;
                         District dist = new District()
                         {
