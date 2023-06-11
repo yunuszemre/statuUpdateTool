@@ -23,6 +23,7 @@ internal class Program
             CarrierRouteMapping? updatedRoute = null;
             AccountCarrierBlacklist? blackListUpdatedRoute = null;
             var context = new sehirContext();
+
             var tmsCont = new cl_tmsContext();
             var addList = new List<string>();
             var liste = context.HjHizmetBoLgeleris.ToList();
